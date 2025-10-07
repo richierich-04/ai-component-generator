@@ -174,7 +174,7 @@ Requirements:
   const downnloadFile = () => {
     if (!code.trim()) return toast.error("No code to download");
 
-    const fileName = "GenUI-Code.html"
+    const fileName = "ProtoSpace-Code.html"
     const blob = new Blob([code], { type: 'text/plain' });
     let url = URL.createObjectURL(blob);
     const link = document.createElement('a');
@@ -188,64 +188,70 @@ Requirements:
   const customSelectStyles = {
     control: (base) => ({
       ...base,
-      backgroundColor: theme === 'dark' ? '#1e293b' : '#f8fafc',
-      borderColor: theme === 'dark' ? '#334155' : '#e2e8f0',
-      color: theme === 'dark' ? '#f8fafc' : '#0f172a',
+      backgroundColor: 'var(--bg-card)',
+      borderColor: 'var(--border-color)',
+      color: 'var(--text-primary)',
       boxShadow: 'none',
-      '&:hover': { borderColor: theme === 'dark' ? '#475569' : '#cbd5e1' },
-      minHeight: '44px',
-      borderRadius: '8px'
+      '&:hover': { borderColor: 'var(--border-hover)' },
+      minHeight: '48px',
+      borderRadius: '10px',
+      borderWidth: '1.5px'
     }),
     menu: (base) => ({
       ...base,
-      backgroundColor: theme === 'dark' ? '#1e293b' : '#ffffff',
-      border: `1px solid ${theme === 'dark' ? '#334155' : '#e2e8f0'}`,
-      boxShadow: theme === 'dark' ? '0 10px 15px -3px rgb(0 0 0 / 0.5)' : '0 10px 15px -3px rgb(0 0 0 / 0.1)',
-      borderRadius: '8px'
+      backgroundColor: 'var(--bg-card)',
+      border: `1.5px solid var(--border-color)`,
+      boxShadow: 'var(--shadow-lg)',
+      borderRadius: '10px'
     }),
     option: (base, state) => ({
       ...base,
       backgroundColor: state.isSelected
-        ? '#8b5cf6'
+        ? 'var(--accent-primary)'
         : state.isFocused
-        ? (theme === 'dark' ? '#334155' : '#f1f5f9')
+        ? 'var(--bg-secondary)'
         : 'transparent',
-      color: state.isSelected ? '#ffffff' : (theme === 'dark' ? '#f8fafc' : '#0f172a'),
-      '&:active': { backgroundColor: '#7c3aed' },
-      cursor: 'pointer'
+      color: state.isSelected ? '#ffffff' : 'var(--text-primary)',
+      '&:active': { backgroundColor: 'var(--accent-hover)' },
+      cursor: 'pointer',
+      padding: '12px 16px'
     }),
     singleValue: (base) => ({ 
       ...base, 
-      color: theme === 'dark' ? '#f8fafc' : '#0f172a' 
+      color: 'var(--text-primary)' 
     }),
     placeholder: (base) => ({ 
       ...base, 
-      color: theme === 'dark' ? '#94a3b8' : '#94a3b8' 
+      color: 'var(--text-tertiary)' 
     }),
     input: (base) => ({ 
       ...base, 
-      color: theme === 'dark' ? '#f8fafc' : '#0f172a' 
+      color: 'var(--text-primary)' 
     })
   };
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: 'var(--bg-primary)' }}>
+    <div className="min-h-screen flex flex-col" style={{ backgroundColor: 'var(--bg-primary)' }}>
       <Navbar onHistoryClick={() => setShowHistory(true)} historyCount={savedComponents.length} />
 
-      <div className="max-w-7xl mx-auto px-4 lg:px-6 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          {/* Left Panel - Input Section */}
-          <div className="card p-6 animate-slide-in">
-            <div className="mb-6">
-              <h2 className='text-2xl font-bold gradient-text mb-2'>Create Your Component</h2>
-              <p style={{ color: 'var(--text-secondary)' }} className="text-sm">
-                Describe what you want to build and let AI generate the code for you.
+      <div className="flex-1 grid grid-cols-1 lg:grid-cols-2">
+        {/* Left Panel - Input Section */}
+        <div className="border-r p-8 overflow-y-auto animate-slide-in" style={{ 
+          borderColor: 'var(--border-color)',
+          backgroundColor: 'var(--bg-secondary)',
+          height: 'calc(100vh - 4rem)'
+        }}>
+          <div className="max-w-2xl mx-auto">
+            <div className="mb-8">
+              <h2 className='text-3xl font-bold gradient-text mb-3'>Create Your Component</h2>
+              <p style={{ color: 'var(--text-secondary)' }} className="text-base">
+                Describe what you want to build and let AI generate professional code for you.
               </p>
             </div>
 
             {/* Framework Selector */}
-            <div className="mb-5">
-              <label className='block text-sm font-semibold mb-2' style={{ color: 'var(--text-primary)' }}>
+            <div className="mb-6">
+              <label className='block text-sm font-semibold mb-3' style={{ color: 'var(--text-primary)' }}>
                 Select Framework
               </label>
               <Select
@@ -257,14 +263,14 @@ Requirements:
             </div>
 
             {/* Prompt Input */}
-            <div className="mb-4">
-              <label className='block text-sm font-semibold mb-2' style={{ color: 'var(--text-primary)' }}>
+            <div className="mb-5">
+              <label className='block text-sm font-semibold mb-3' style={{ color: 'var(--text-primary)' }}>
                 Describe Your Component
               </label>
               <textarea
                 onChange={(e) => setPrompt(e.target.value)}
                 value={prompt}
-                className='input-field w-full min-h-[180px] resize-none'
+                className='input-field w-full min-h-[200px] resize-none'
                 placeholder="E.g., Create a modern pricing card with 3 tiers, gradient background, and hover animations..."
               ></textarea>
             </div>
@@ -273,22 +279,25 @@ Requirements:
             <button
               onClick={getSuggestedPrompt}
               disabled={loadingSuggestion || !prompt.trim()}
-              className="btn-secondary w-full mb-4 flex items-center justify-center gap-2"
+              className="btn-secondary w-full mb-5 flex items-center justify-center gap-2 h-12"
             >
-              {loadingSuggestion ? <ClipLoader color={theme === 'dark' ? 'white' : 'black'} size={14} /> : "✨"}
+              {loadingSuggestion ? <ClipLoader color={theme === 'dark' ? 'white' : 'black'} size={16} /> : "✨"}
               {loadingSuggestion ? "Enhancing Prompt..." : "Suggest Better Prompt"}
             </button>
 
             {/* AI Suggestion Display */}
             {showSuggestion && (
-              <div className="card p-4 mb-4 border-2" style={{ borderColor: 'var(--accent-primary)' }}>
-                <p className="text-sm font-semibold mb-2" style={{ color: 'var(--accent-primary)' }}>
-                  ✨ AI-Enhanced Prompt
+              <div className="p-5 mb-5 rounded-xl border-2 shadow-lg animate-slide-in" style={{ 
+                borderColor: 'var(--accent-primary)',
+                backgroundColor: 'var(--bg-card)'
+              }}>
+                <p className="text-sm font-semibold mb-3 flex items-center gap-2" style={{ color: 'var(--accent-primary)' }}>
+                  <span className="text-lg">✨</span> AI-Enhanced Prompt
                 </p>
-                <p className="text-sm mb-3" style={{ color: 'var(--text-secondary)' }}>
+                <p className="text-sm mb-4 leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
                   {suggestedPrompt}
                 </p>
-                <div className="flex gap-2">
+                <div className="flex gap-3">
                   <button
                     onClick={() => {
                       setPrompt(suggestedPrompt);
@@ -301,7 +310,7 @@ Requirements:
                   </button>
                   <button
                     onClick={() => setShowSuggestion(false)}
-                    className="btn-secondary px-4"
+                    className="btn-secondary px-6"
                   >
                     Dismiss
                   </button>
@@ -313,140 +322,148 @@ Requirements:
             <button
               onClick={getResponse}
               disabled={loading || !prompt.trim()}
-              className="btn-primary w-full flex items-center justify-center gap-2"
+              className="btn-primary w-full flex items-center justify-center gap-3 h-14 text-base"
               style={{ opacity: loading || !prompt.trim() ? 0.6 : 1, cursor: loading || !prompt.trim() ? 'not-allowed' : 'pointer' }}
             >
-              {loading ? <ClipLoader color='white' size={18} /> : <BsStars className="text-xl" />}
-              {loading ? "Generating..." : "Generate Component"}
+              {loading ? <ClipLoader color='white' size={20} /> : <BsStars className="text-xl" />}
+              {loading ? "Generating Component..." : "Generate Component"}
             </button>
           </div>
+        </div>
 
-          {/* Right Panel - Output Section */}
-          <div className="card overflow-hidden animate-slide-in" style={{ height: '80vh' }}>
-            {!outputScreen ? (
-              <div className="w-full h-full flex items-center flex-col justify-center p-8 text-center">
-                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center mb-4 shadow-lg">
-                  <HiOutlineCode className="text-4xl text-white" />
-                </div>
-                <h3 className="text-xl font-bold mb-2" style={{ color: 'var(--text-primary)' }}>
-                  Your Code Will Appear Here
-                </h3>
-                <p style={{ color: 'var(--text-secondary)' }} className="max-w-md">
-                  Describe your component and click generate to see the code and live preview.
-                </p>
+        {/* Right Panel - Output Section */}
+        <div className="overflow-hidden animate-slide-in" style={{ 
+          backgroundColor: 'var(--bg-primary)',
+          height: 'calc(100vh - 4rem)'
+        }}>
+          {!outputScreen ? (
+            <div className="w-full h-full flex items-center flex-col justify-center p-8 text-center">
+              <div className="w-24 h-24 rounded-2xl gradient-bg flex items-center justify-center mb-6 shadow-xl">
+                <HiOutlineCode className="text-5xl text-white" />
               </div>
-            ) : (
-              <div className="h-full flex flex-col">
-                {/* Tabs */}
-                <div className="flex border-b" style={{ borderColor: 'var(--border-color)', backgroundColor: 'var(--bg-secondary)' }}>
-                  <button
-                    onClick={() => setTab(1)}
-                    className={`flex-1 py-3 px-4 font-medium transition-all ${
-                      tab === 1 ? 'border-b-2 border-purple-500' : ''
-                    }`}
-                    style={{ 
-                      color: tab === 1 ? 'var(--accent-primary)' : 'var(--text-secondary)',
-                      backgroundColor: tab === 1 ? 'var(--bg-primary)' : 'transparent'
-                    }}
-                  >
-                    Code Editor
-                  </button>
-                  <button
-                    onClick={() => setTab(2)}
-                    className={`flex-1 py-3 px-4 font-medium transition-all ${
-                      tab === 2 ? 'border-b-2 border-purple-500' : ''
-                    }`}
-                    style={{ 
-                      color: tab === 2 ? 'var(--accent-primary)' : 'var(--text-secondary)',
-                      backgroundColor: tab === 2 ? 'var(--bg-primary)' : 'transparent'
-                    }}
-                  >
-                    Live Preview
-                  </button>
-                </div>
+              <h3 className="text-2xl font-bold mb-3" style={{ color: 'var(--text-primary)' }}>
+                Your Code Will Appear Here
+              </h3>
+              <p style={{ color: 'var(--text-secondary)' }} className="max-w-md text-base">
+                Describe your component and click generate to see the code and live preview.
+              </p>
+            </div>
+          ) : (
+            <div className="h-full flex flex-col">
+              {/* Tabs */}
+              <div className="flex border-b" style={{ borderColor: 'var(--border-color)', backgroundColor: 'var(--bg-card)' }}>
+                <button
+                  onClick={() => setTab(1)}
+                  className={`flex-1 py-4 px-6 font-semibold transition-all ${
+                    tab === 1 ? 'border-b-2' : ''
+                  }`}
+                  style={{ 
+                    color: tab === 1 ? 'var(--accent-primary)' : 'var(--text-secondary)',
+                    backgroundColor: tab === 1 ? 'var(--bg-primary)' : 'transparent',
+                    borderColor: tab === 1 ? 'var(--accent-primary)' : 'transparent'
+                  }}
+                >
+                  Code Editor
+                </button>
+                <button
+                  onClick={() => setTab(2)}
+                  className={`flex-1 py-4 px-6 font-semibold transition-all ${
+                    tab === 2 ? 'border-b-2' : ''
+                  }`}
+                  style={{ 
+                    color: tab === 2 ? 'var(--accent-primary)' : 'var(--text-secondary)',
+                    backgroundColor: tab === 2 ? 'var(--bg-primary)' : 'transparent',
+                    borderColor: tab === 2 ? 'var(--accent-primary)' : 'transparent'
+                  }}
+                >
+                  Live Preview
+                </button>
+              </div>
 
-                {/* Toolbar */}
-                <div className="flex items-center justify-between px-4 py-3 border-b" style={{ borderColor: 'var(--border-color)', backgroundColor: 'var(--bg-secondary)' }}>
-                  <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                    <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                    <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                    <span className="ml-3 text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
-                      {tab === 1 ? 'Code Editor' : 'Live Preview'}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    {tab === 1 ? (
-                      <>
-                        <button onClick={copyCode} className="icon-btn" title="Copy Code">
-                          <IoCopy />
-                        </button>
-                        <button onClick={downnloadFile} className="icon-btn" title="Download">
-                          <PiExportBold />
-                        </button>
-                      </>
-                    ) : (
-                      <>
-                        <button onClick={() => setIsNewTabOpen(true)} className="icon-btn" title="Open in New Tab">
-                          <ImNewTab />
-                        </button>
-                        <button onClick={() => setRefreshKey(prev => prev + 1)} className="icon-btn" title="Refresh Preview">
-                          <FiRefreshCcw />
-                        </button>
-                        <button onClick={saveComponent} className="icon-btn" title="Save Component">
-                          💾
-                        </button>
-                      </>
-                    )}
-                  </div>
+              {/* Toolbar */}
+              <div className="flex items-center justify-between px-6 py-4 border-b" style={{ 
+                borderColor: 'var(--border-color)', 
+                backgroundColor: 'var(--bg-card)' 
+              }}>
+                <div className="flex items-center gap-3">
+                  <div className="w-3 h-3 rounded-full" style={{ backgroundColor: 'var(--danger)' }}></div>
+                  <div className="w-3 h-3 rounded-full" style={{ backgroundColor: 'var(--warning)' }}></div>
+                  <div className="w-3 h-3 rounded-full" style={{ backgroundColor: 'var(--success)' }}></div>
+                  <span className="ml-4 text-sm font-semibold" style={{ color: 'var(--text-secondary)' }}>
+                    {tab === 1 ? 'Code Editor' : 'Live Preview'}
+                  </span>
                 </div>
-
-                {/* Content Area */}
-                <div className="flex-1 overflow-hidden">
+                <div className="flex items-center gap-2">
                   {tab === 1 ? (
-                    <Editor 
-                      value={code} 
-                      height="100%" 
-                      theme={theme === 'dark' ? 'vs-dark' : 'light'}
-                      language="html"
-                      onChange={(newValue) => debouncedSetCode(newValue)}
-                      options={{
-                        minimap: { enabled: false },
-                        fontSize: 14,
-                        lineNumbers: 'on',
-                        scrollBeyondLastLine: false,
-                        automaticLayout: true,
-                      }}
-                    />
+                    <>
+                      <button onClick={copyCode} className="icon-btn" title="Copy Code">
+                        <IoCopy />
+                      </button>
+                      <button onClick={downnloadFile} className="icon-btn" title="Download">
+                        <PiExportBold />
+                      </button>
+                    </>
                   ) : (
-                    <iframe 
-                      key={refreshKey} 
-                      srcDoc={code} 
-                      className="w-full h-full"
-                      style={{ backgroundColor: '#ffffff' }}
-                    ></iframe>
+                    <>
+                      <button onClick={() => setIsNewTabOpen(true)} className="icon-btn" title="Open in New Tab">
+                        <ImNewTab />
+                      </button>
+                      <button onClick={() => setRefreshKey(prev => prev + 1)} className="icon-btn" title="Refresh Preview">
+                        <FiRefreshCcw />
+                      </button>
+                      <button onClick={saveComponent} className="icon-btn" title="Save Component">
+                        💾
+                      </button>
+                    </>
                   )}
                 </div>
               </div>
-            )}
-          </div>
+
+              {/* Content Area */}
+              <div className="flex-1 overflow-hidden">
+                {tab === 1 ? (
+                  <Editor 
+                    value={code} 
+                    height="100%" 
+                    theme={theme === 'dark' ? 'vs-dark' : 'light'}
+                    language="html"
+                    onChange={(newValue) => debouncedSetCode(newValue)}
+                    options={{
+                      minimap: { enabled: false },
+                      fontSize: 14,
+                      lineNumbers: 'on',
+                      scrollBeyondLastLine: false,
+                      automaticLayout: true,
+                    }}
+                  />
+                ) : (
+                  <iframe 
+                    key={refreshKey} 
+                    srcDoc={code} 
+                    className="w-full h-full"
+                    style={{ backgroundColor: '#ffffff' }}
+                  ></iframe>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
       {/* History Sidebar */}
       {showHistory && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-end animate-slide-in">
+        <div className="fixed inset-0 bg-black bg-opacity-60 z-50 flex justify-end animate-slide-in backdrop-blur-sm">
           <div className="w-full max-w-md h-full shadow-2xl overflow-y-auto" style={{ backgroundColor: 'var(--bg-card)' }}>
             {/* Header */}
-            <div className="sticky top-0 p-6 border-b flex items-center justify-between z-10" style={{ 
+            <div className="sticky top-0 p-6 border-b flex items-center justify-between z-10 shadow-sm" style={{ 
               borderColor: 'var(--border-color)',
-              backgroundColor: 'var(--bg-secondary)'
+              backgroundColor: 'var(--bg-card)'
             }}>
               <div>
-                <h3 className="text-xl font-bold" style={{ color: 'var(--text-primary)' }}>
+                <h3 className="text-2xl font-bold gradient-text">
                   Saved Components
                 </h3>
-                <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>
+                <p className="text-sm mt-2" style={{ color: 'var(--text-secondary)' }}>
                   {savedComponents.length} component{savedComponents.length !== 1 ? 's' : ''} saved
                 </p>
               </div>
@@ -459,13 +476,13 @@ Requirements:
             </div>
 
             {/* Component List */}
-            <div className="p-4">
+            <div className="p-6">
               {savedComponents.length === 0 ? (
-                <div className="text-center py-12">
-                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center mx-auto mb-4">
-                    <HiOutlineCode className="text-3xl text-white" />
+                <div className="text-center py-16">
+                  <div className="w-20 h-20 rounded-2xl gradient-bg flex items-center justify-center mx-auto mb-6 shadow-xl">
+                    <HiOutlineCode className="text-4xl text-white" />
                   </div>
-                  <p className="font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+                  <p className="font-bold text-lg mb-2" style={{ color: 'var(--text-primary)' }}>
                     No Saved Components
                   </p>
                   <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
@@ -473,20 +490,24 @@ Requirements:
                   </p>
                 </div>
               ) : (
-                <div className="space-y-3">
+                <div className="space-y-4">
                   {savedComponents.map((component, index) => (
                     <div 
                       key={component.id}
-                      className="card p-4 hover:shadow-lg transition-all animate-slide-in"
-                      style={{ animationDelay: `${index * 0.05}s` }}
+                      className="p-5 rounded-xl hover:shadow-xl transition-all animate-slide-in border"
+                      style={{ 
+                        animationDelay: `${index * 0.05}s`,
+                        backgroundColor: 'var(--bg-secondary)',
+                        borderColor: 'var(--border-color)'
+                      }}
                     >
-                      <div className="flex items-start justify-between mb-2">
+                      <div className="flex items-start justify-between mb-3">
                         <h4 className="font-semibold text-sm line-clamp-2" style={{ color: 'var(--text-primary)' }}>
                           {component.name}
                         </h4>
                       </div>
-                      <div className="flex items-center gap-2 mb-3">
-                        <span className="text-xs px-2 py-1 rounded-full" style={{ 
+                      <div className="flex items-center gap-2 mb-4">
+                        <span className="text-xs px-3 py-1.5 rounded-full font-medium" style={{ 
                           backgroundColor: 'var(--accent-light)',
                           color: 'var(--accent-primary)'
                         }}>
@@ -496,10 +517,10 @@ Requirements:
                           {component.timestamp}
                         </span>
                       </div>
-                      <div className="flex gap-2">
+                      <div className="flex gap-3">
                         <button
                           onClick={() => loadComponent(component)}
-                          className="flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-all"
+                          className="flex-1 px-4 py-2.5 rounded-lg text-sm font-semibold transition-all shadow-md"
                           style={{
                             backgroundColor: 'var(--accent-primary)',
                             color: 'white'
@@ -509,9 +530,9 @@ Requirements:
                         </button>
                         <button
                           onClick={() => deleteComponent(component.id)}
-                          className="px-3 py-2 rounded-lg text-sm font-medium transition-all"
+                          className="px-4 py-2.5 rounded-lg text-sm font-semibold transition-all"
                           style={{
-                            backgroundColor: '#ef4444',
+                            backgroundColor: 'var(--danger)',
                             color: 'white'
                           }}
                         >
@@ -530,15 +551,15 @@ Requirements:
       {/* Fullscreen Preview */}
       {isNewTabOpen && (
         <div className="fixed inset-0 z-50 flex flex-col" style={{ backgroundColor: 'var(--bg-primary)' }}>
-          <div className="h-14 flex items-center justify-between px-6 border-b" style={{ 
+          <div className="h-16 flex items-center justify-between px-8 border-b shadow-sm" style={{ 
             borderColor: 'var(--border-color)',
-            backgroundColor: 'var(--bg-secondary)'
+            backgroundColor: 'var(--bg-card)'
           }}>
-            <div className="flex items-center gap-3">
-              <div className="w-3 h-3 rounded-full bg-red-500"></div>
-              <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-              <div className="w-3 h-3 rounded-full bg-green-500"></div>
-              <span className="ml-3 font-semibold" style={{ color: 'var(--text-primary)' }}>
+            <div className="flex items-center gap-4">
+              <div className="w-3 h-3 rounded-full" style={{ backgroundColor: 'var(--danger)' }}></div>
+              <div className="w-3 h-3 rounded-full" style={{ backgroundColor: 'var(--warning)' }}></div>
+              <div className="w-3 h-3 rounded-full" style={{ backgroundColor: 'var(--success)' }}></div>
+              <span className="ml-4 font-bold text-lg gradient-text">
                 Full Screen Preview
               </span>
             </div>

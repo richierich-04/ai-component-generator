@@ -10,18 +10,18 @@ const Navbar = ({ onHistoryClick, historyCount }) => {
   return (
     <nav className='sticky top-0 z-50 backdrop-blur-lg bg-opacity-80 border-b transition-all duration-300'
       style={{
-        backgroundColor: theme === 'dark' ? 'rgba(15, 23, 42, 0.8)' : 'rgba(255, 255, 255, 0.8)',
+        backgroundColor: theme === 'dark' ? 'rgba(10, 10, 15, 0.8)' : 'rgba(245, 245, 247, 0.8)',
         borderColor: 'var(--border-color)'
       }}>
       <div className='max-w-7xl mx-auto px-6 lg:px-8 h-16 flex items-center justify-between'>
         {/* Logo Section */}
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-xl gradient-bg flex items-center justify-center shadow-lg">
             <BsStars className="text-white text-xl" />
           </div>
           <div>
-            <h3 className='text-xl font-bold gradient-text'>GenUI</h3>
-            <p className='text-xs' style={{ color: 'var(--text-tertiary)' }}>AI Component Generator</p>
+            <h3 className='text-xl font-bold gradient-text'>ProtoSpace Studio</h3>
+            <p className='text-xs' style={{ color: 'var(--text-tertiary)' }}>Professional Component Generator</p>
           </div>
         </div>
 
@@ -35,7 +35,7 @@ const Navbar = ({ onHistoryClick, historyCount }) => {
           >
             <FaHistory className="text-lg" />
             {historyCount > 0 && (
-              <span className="absolute -top-1 -right-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-lg">
+              <span className="absolute -top-1 -right-1 gradient-bg text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-lg">
                 {historyCount > 9 ? '9+' : historyCount}
               </span>
             )}
@@ -53,7 +53,7 @@ const Navbar = ({ onHistoryClick, historyCount }) => {
             {theme === 'dark' ? (
               <IoIosSunny className="text-xl text-yellow-400" />
             ) : (
-              <IoIosMoon className="text-xl text-purple-600" />
+              <IoIosMoon className="text-xl text-blue-600" />
             )}
             <span className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
               {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
