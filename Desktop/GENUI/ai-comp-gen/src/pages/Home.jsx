@@ -13,6 +13,7 @@ import { toast } from 'react-toastify';
 import { debounce } from 'lodash';
 import { useTheme } from '../App';
 import React, { useState, useEffect } from 'react'
+import { MdWorkspaces } from 'react-icons/md';
 
 const Home = () => {
   const { theme } = useTheme();
@@ -174,7 +175,7 @@ Requirements:
   const downnloadFile = () => {
     if (!code.trim()) return toast.error("No code to download");
 
-    const fileName = "ProtoSpace-Code.html"
+    const fileName = "Ideafy-Component.html"
     const blob = new Blob([code], { type: 'text/plain' });
     let url = URL.createObjectURL(blob);
     const link = document.createElement('a');
@@ -232,7 +233,7 @@ Requirements:
 
   return (
     <div className="min-h-screen flex flex-col" style={{ backgroundColor: 'var(--bg-primary)' }}>
-      <Navbar onHistoryClick={() => setShowHistory(true)} historyCount={savedComponents.length} />
+      <Navbar onWorkspaceClick={() => setShowHistory(true)} componentCount={savedComponents.length} />
 
       <div className="flex-1 grid grid-cols-1 lg:grid-cols-2">
         {/* Left Panel - Input Section */}
@@ -338,15 +339,40 @@ Requirements:
         }}>
           {!outputScreen ? (
             <div className="w-full h-full flex items-center flex-col justify-center p-8 text-center">
-              <div className="w-24 h-24 rounded-2xl gradient-bg flex items-center justify-center mb-6 shadow-xl">
-                <HiOutlineCode className="text-5xl text-white" />
-              </div>
-              <h3 className="text-2xl font-bold mb-3" style={{ color: 'var(--text-primary)' }}>
-                Your Code Will Appear Here
-              </h3>
-              <p style={{ color: 'var(--text-secondary)' }} className="max-w-md text-base">
-                Describe your component and click generate to see the code and live preview.
-              </p>
+              {loading ? (
+                // Loading State
+                <>
+                  <div className="relative mb-8">
+                    <div className="w-24 h-24 rounded-2xl gradient-bg flex items-center justify-center shadow-2xl animate-pulse">
+                      <ClipLoader color='white' size={40} />
+                    </div>
+                  </div>
+                  <h3 className="text-2xl font-bold mb-3 animate-pulse" style={{ color: 'var(--text-primary)' }}>
+                    Creating Your Component...
+                  </h3>
+                  <p style={{ color: 'var(--text-secondary)' }} className="max-w-md text-base mb-6">
+                    Hang tight! Our AI is crafting something amazing for you.
+                  </p>
+                  <div className="flex gap-2 justify-center">
+                    <div className="w-2 h-2 rounded-full gradient-bg animate-bounce" style={{ animationDelay: '0s' }}></div>
+                    <div className="w-2 h-2 rounded-full gradient-bg animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                    <div className="w-2 h-2 rounded-full gradient-bg animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+                  </div>
+                </>
+              ) : (
+                // Empty State
+                <>
+                  <div className="w-24 h-24 rounded-2xl gradient-bg flex items-center justify-center mb-6 shadow-xl">
+                    <HiOutlineCode className="text-5xl text-white" />
+                  </div>
+                  <h3 className="text-2xl font-bold mb-3" style={{ color: 'var(--text-primary)' }}>
+                    Your Code Will Appear Here
+                  </h3>
+                  <p style={{ color: 'var(--text-secondary)' }} className="max-w-md text-base">
+                    Describe your component and click generate to see the code and live preview.
+                  </p>
+                </>
+              )}
             </div>
           ) : (
             <div className="h-full flex flex-col">
@@ -450,21 +476,22 @@ Requirements:
         </div>
       </div>
 
-      {/* History Sidebar */}
+      {/* My Workspace Sidebar */}
       {showHistory && (
         <div className="fixed inset-0 bg-black bg-opacity-60 z-50 flex justify-end animate-slide-in backdrop-blur-sm">
-          <div className="w-full max-w-md h-full shadow-2xl overflow-y-auto" style={{ backgroundColor: 'var(--bg-card)' }}>
+          <div className="w-full max-w-2xl h-full shadow-2xl overflow-y-auto" style={{ backgroundColor: 'var(--bg-card)' }}>
             {/* Header */}
             <div className="sticky top-0 p-6 border-b flex items-center justify-between z-10 shadow-sm" style={{ 
               borderColor: 'var(--border-color)',
               backgroundColor: 'var(--bg-card)'
             }}>
               <div>
-                <h3 className="text-2xl font-bold gradient-text">
-                  Saved Components
+                <h3 className="text-3xl font-bold gradient-text flex items-center gap-3">
+                  <MdWorkspaces className="text-3xl" />
+                  My Workspace
                 </h3>
                 <p className="text-sm mt-2" style={{ color: 'var(--text-secondary)' }}>
-                  {savedComponents.length} component{savedComponents.length !== 1 ? 's' : ''} saved
+                  {savedComponents.length} component{savedComponents.length !== 1 ? 's' : ''} in your workspace
                 </p>
               </div>
               <button 
@@ -475,39 +502,57 @@ Requirements:
               </button>
             </div>
 
-            {/* Component List */}
-            <div className="p-6">
+            {/* Components Grid */}
+            <div className="p-6 space-y-4">
               {savedComponents.length === 0 ? (
-                <div className="text-center py-16">
-                  <div className="w-20 h-20 rounded-2xl gradient-bg flex items-center justify-center mx-auto mb-6 shadow-xl">
-                    <HiOutlineCode className="text-4xl text-white" />
+                <div className="flex flex-col items-center justify-center py-20 text-center">
+                  <div className="w-20 h-20 rounded-2xl gradient-bg flex items-center justify-center mb-4 opacity-50">
+                    <MdWorkspaces className="text-4xl text-white" />
                   </div>
-                  <p className="font-bold text-lg mb-2" style={{ color: 'var(--text-primary)' }}>
-                    No Saved Components
-                  </p>
-                  <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-                    Generate and save your first component to see it here!
+                  <h4 className="text-xl font-bold mb-2" style={{ color: 'var(--text-primary)' }}>
+                    No Components Yet
+                  </h4>
+                  <p style={{ color: 'var(--text-secondary)' }}>
+                    Generate and save components to see them here
                   </p>
                 </div>
               ) : (
-                <div className="space-y-4">
-                  {savedComponents.map((component, index) => (
-                    <div 
-                      key={component.id}
-                      className="p-5 rounded-xl hover:shadow-xl transition-all animate-slide-in border"
-                      style={{ 
-                        animationDelay: `${index * 0.05}s`,
-                        backgroundColor: 'var(--bg-secondary)',
-                        borderColor: 'var(--border-color)'
-                      }}
-                    >
-                      <div className="flex items-start justify-between mb-3">
-                        <h4 className="font-semibold text-sm line-clamp-2" style={{ color: 'var(--text-primary)' }}>
-                          {component.name}
-                        </h4>
+                savedComponents.map((component, index) => (
+                  <div 
+                    key={component.id}
+                    className="group p-6 rounded-xl hover:shadow-2xl transition-all animate-slide-in border-2 cursor-pointer"
+                    style={{ 
+                      animationDelay: `${index * 0.05}s`,
+                      backgroundColor: 'var(--bg-secondary)',
+                      borderColor: 'var(--border-color)'
+                    }}
+                  >
+                    {/* Preview Box */}
+                    <div className="relative mb-4 rounded-lg overflow-hidden border-2" style={{ 
+                      borderColor: 'var(--border-color)',
+                      height: '180px'
+                    }}>
+                      <iframe 
+                        srcDoc={component.code}
+                        className="w-full h-full pointer-events-none transform scale-75 origin-top-left"
+                        style={{ 
+                          width: '133%',
+                          height: '133%',
+                          backgroundColor: '#ffffff'
+                        }}
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-4">
+                        <span className="text-white text-sm font-semibold">Click to view</span>
                       </div>
-                      <div className="flex items-center gap-2 mb-4">
-                        <span className="text-xs px-3 py-1.5 rounded-full font-medium" style={{ 
+                    </div>
+
+                    {/* Component Info */}
+                    <div className="mb-4">
+                      <h4 className="font-bold text-base mb-2 line-clamp-2" style={{ color: 'var(--text-primary)' }}>
+                        {component.name}
+                      </h4>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-xs px-3 py-1 rounded-full font-semibold" style={{ 
                           backgroundColor: 'var(--accent-light)',
                           color: 'var(--accent-primary)'
                         }}>
@@ -517,31 +562,39 @@ Requirements:
                           {component.timestamp}
                         </span>
                       </div>
-                      <div className="flex gap-3">
-                        <button
-                          onClick={() => loadComponent(component)}
-                          className="flex-1 px-4 py-2.5 rounded-lg text-sm font-semibold transition-all shadow-md"
-                          style={{
-                            backgroundColor: 'var(--accent-primary)',
-                            color: 'white'
-                          }}
-                        >
-                          Load
-                        </button>
-                        <button
-                          onClick={() => deleteComponent(component.id)}
-                          className="px-4 py-2.5 rounded-lg text-sm font-semibold transition-all"
-                          style={{
-                            backgroundColor: 'var(--danger)',
-                            color: 'white'
-                          }}
-                        >
-                          Delete
-                        </button>
-                      </div>
                     </div>
-                  ))}
-                </div>
+
+                    {/* Action Buttons */}
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => loadComponent(component)}
+                        className="flex-1 px-4 py-2.5 rounded-lg text-sm font-bold transition-all shadow-md hover:shadow-lg"
+                        style={{
+                          backgroundColor: 'var(--accent-primary)',
+                          color: 'white'
+                        }}
+                      >
+                        Open
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (window.confirm('Are you sure you want to delete this component?')) {
+                            deleteComponent(component.id);
+                          }
+                        }}
+                        className="px-4 py-2.5 rounded-lg text-sm font-bold transition-all"
+                        style={{
+                          backgroundColor: 'var(--bg-tertiary)',
+                          color: 'var(--text-primary)',
+                          border: '1.5px solid var(--border-color)'
+                        }}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                ))
               )}
             </div>
           </div>
